@@ -1,0 +1,15 @@
+{
+  "name": "mfa",
+  "description": "MFA — Market Financial Analysis: an invite-only research desk for US and Borsa Istanbul stocks, used from Claude.",
+  "owner": {
+    "name": "Pragmatic Growth",
+    "url": "https://getmfa.app"
+  },
+  "plugins": [
+    {
+      "name": "mfa",
+      "source": "./plugins/mfa",
+      "description": "Analyse, keep your book, arm alerts and read your scorecard in MFA, straight from Claude."
+    }
+  ]
+}

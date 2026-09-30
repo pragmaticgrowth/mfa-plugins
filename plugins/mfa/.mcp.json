@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "mfa": {
+      "type": "http",
+      "url": "https://api.getmfa.app/mcp/claude"
+    }
+  }
+}
