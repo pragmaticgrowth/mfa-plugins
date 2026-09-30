@@ -1,7 +1,7 @@
 {
   "name": "mfa",
   "displayName": "MFA",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Work your MFA account from Claude: prepared analysis with graded calls, your positions and fills, watchlist and Telegram alerts, and the scorecard. Invite-only; needs an MFA account.",
   "author": { "name": "Pragmatic Growth", "url": "https://getmfa.app" },
   "homepage": "https://app.getmfa.app",

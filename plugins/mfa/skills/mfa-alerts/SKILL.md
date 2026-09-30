@@ -1,6 +1,6 @@
 ---
 name: mfa-alerts
-description: Price levels and Telegram alerts in MFA — proposing and setting stops, targets and alarms, arming a recorded call's levels, listing or cancelling alert rules, explaining what fired, and showing exactly what MFA sent to Telegram. Use when the user says "stop kur", "alarm kur", "hedef koy", "200'ü geçerse haber ver", "hangi alarmlar kurulu", "ne tetiklendi", "Telegram'a ne gönderdin", or asks why they did or didn't get an alert.
+description: Price levels, indicator alerts and Telegram alerts in MFA — proposing and setting stops, targets and alarms, indicator alarms (Supertrend flip, RSI, moving-average and MACD crosses, Ichimoku cloud breaks), arming a recorded call's levels, listing or cancelling alert rules, explaining what fired, and showing exactly what MFA sent to Telegram. Use when the user says "stop kur", "alarm kur", "hedef koy", "200'ü geçerse haber ver", "Supertrend dönerse haber ver", "RSI 30'un altına inerse", "hangi alarmlar kurulu", "ne tetiklendi", "Telegram'a ne gönderdin", or asks why they did or didn't get an alert.
 ---
 
 # MFA alerts
@@ -37,6 +37,25 @@ as part of an `mfa-analyst` verdict.
   `mfa_cancel_alert_rule` removes one on their word.
 
 Confirm in one line what was stored and what it will push.
+
+## Indicator alerts
+
+"Supertrend dönerse haber ver", "RSI 30'un altına inerse", "200 günlüğü
+kırarsa", "golden cross olursa": arm them with `mfa_add_indicator_alert`.
+Conditions: Supertrend flip up/down, RSI(14) crossing a threshold, the close
+crossing the 20/50/100/200-day average, golden/death cross (50/200), MACD
+crossing its signal line, and an Ichimoku cloud break up/down.
+
+- They are judged on the **daily close**, and only on sessions after the
+  rule was armed. Say so: "kapanışta bakılır, bugünden sonraki seanslar".
+- One-shot by default; `repeat: true` keeps it armed (at most one push per
+  session). Ask which they want when it isn't obvious.
+- Before arming, look at the dossier's technical card for that indicator's
+  label: `tested` carries a measured hit rate, `context` means it has shown
+  no edge across MFA's 18-month replay (Supertrend is `context` today). Tell
+  the user in one sentence, then arm it anyway if they still want it — it is
+  their alarm, and its outcomes are graded in the scorecard.
+- Confirm in one line with the rule's own description.
 
 ## What fired, and what was sent
 
