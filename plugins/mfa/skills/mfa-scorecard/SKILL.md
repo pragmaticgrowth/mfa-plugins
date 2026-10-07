@@ -1,13 +1,15 @@
 ---
 name: mfa-scorecard
-description: How MFA's calls, signals and setups have actually performed — the graded call ledger, hit rates by verdict and horizon, which inputs, recipes and setups have earned trust, the setup backtest, and a position's track record. Use when the user asks "nasıl gidiyoruz", "çağrıların ne kadar tuttu", "scorecard", "hangi sinyallere güvenebilirim", "kurulumlar tutuyor mu", "backtest ne dedi", "XYZ'de geçmiş kararlar", or before leaning on a call type that may have been losing.
+description: This skill should be used when the user asks how MFA's calls, signals and setups have actually performed, or what the setup backtest found — the graded call ledger, hit rates by verdict and horizon, which inputs, recipes and setups have earned trust, the five-year backtest's results, and a ticker's track record. Trigger phrases include "nasıl gidiyoruz", "çağrıların ne kadar tuttu", "scorecard", "hangi sinyallere güvenebilirim", "kurulumlar tutuyor mu", "backtest ne dedi", "XYZ'de geçmiş kararlar", and before leaning on a call type that may have been losing. Why a method is or is not trusted, and where a stop belongs, is mfa-analyst.
 ---
 
 # MFA scorecard
 
-Nothing in MFA has demonstrated an edge yet, so every recorded call, card
+The Monday Telegram scorecard carries the same numbers as
+`mfa_get_scorecard`. Nothing in MFA has demonstrated an edge yet, so every recorded call, card
 part, news event, recipe match, screen result and setup signal is graded
-forward. The scorecard is how the user learns what to trust.
+forward. The scorecard is how the user learns what to trust; report it
+plainly, small samples included.
 
 ## Read
 
@@ -26,17 +28,27 @@ forward. The scorecard is how the user learns what to trust.
 
 ## Setups: two different measurements
 
-- **The backtest** (2026-10 run, 5 years, 4,047 names, 19 setups × 3 trade
-  shapes × US/BIST, after costs): no setup beat a random entry in the same
-  market on the same day, so every one is `context`. A planted look-ahead
-  control was detected clearly, so the flat result is real. These rows are
-  `setups.backtest`. The full report is `docs/research/2026-10-setups/REPORT.md`
-  in the MFA repo (not in this plugin); quote only what the tools return.
+- **The backtest** (2026-10 run, 5 years, 4,047 names, 19 setups in the US
+  and 18 on BIST × 3 trade shapes, 1.59M trades, after costs): no setup beat a random entry
+  in the same market on the same day, so every one is `context`. A planted
+  look-ahead control was detected clearly, so the flat result is real. The
+  tools carry it: `setups.backtest` (the catalogue row per setup and market),
+  and `findings` / `shapes` in `mfa_get_scorecard` → `setups` and in
+  `mfa_get_setups`. Quote those; `references/backtest-2026-10.md` has the
+  full tables (ranking, stop rates by shape, the market baseline by regime,
+  the holdout month by month, limitations) for a deeper question. The
+  literature behind each method is `mfa-analyst`'s
+  `references/methods-evidence.md`.
 - **Forward grading** (`setups.live`): every confirmed setup signal MFA
-  recorded on held and watched names, graded on its own trade shape. Show the
-  table — setup, market, n, win rate, mean R — and name the setups still
-  under 20 samples (`not_available`) in one line. A forward table that
-  disagrees with the backtest is a finding; say it, and say how small n is.
+  recorded on held and watched names, replayed nightly on its own trade shape
+  from the next open. Show the table — setup, market, n, win rate, mean R —
+  and name the setups still under 20 samples (`not_available`) in one line.
+  A forward table that disagrees with the backtest is a finding; say it, and
+  say how small n is.
+- **How a setup earns trust:** only by passing the same pre-registered gates
+  on a later backtest run under a new catalogue version. A good forward run
+  alone does not promote it; say so if the user asks why a winning setup
+  still does not push.
 
 ## Answer
 
@@ -49,4 +61,4 @@ forward. The scorecard is how the user learns what to trust.
   across currencies or markets yourself.
 
 Reply in the user's language. This is a report of measured results — no
-disclaimer unless you add a forward-looking view.
+disclaimer unless the answer adds a forward-looking view.
