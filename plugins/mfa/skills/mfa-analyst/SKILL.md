@@ -92,8 +92,9 @@ held in ≥ 75% of years, holdout ≥ 30 trades with mean R ≥ 0). `live_count`
   or asks for a fresh analysis.
 - **Size carries the ~5% loss.** Hitting the stop should cost the user's
   stated risk: 5% of the money they planned for this trade unless a memory or
-  the risk settings say otherwise. With risk settings, `mfa_position_size`
-  gives the share count (show its `working`). With a named sum instead:
+  the risk settings say otherwise. Only if `mfa_get_risk_settings` returned a
+  book in the ticker's currency, `mfa_position_size` gives the share count
+  (show its `working`); without one it only refuses, so skip it. With a named sum instead:
   position = sum × 5% ÷ stop distance %, never more than the sum. Example:
   100,000 TRY planned, stop 12% away → buy 41,667 TRY; the stop costs
   5,000 TRY. Show the arithmetic.

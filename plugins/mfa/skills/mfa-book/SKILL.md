@@ -79,11 +79,13 @@ about six months at most — and that a stop or trail exit always pushes.
 
 ## Sizing — "ne kadar alayım"
 
-`mfa_get_risk_settings`, then `mfa_position_size { "ticker": ... }` (send
-`entry_price` / `stop_price` only if they named them). Two sentences: the
-share count with its currency, then the one binding constraint. On
-`not_available` with no sum named, relay the reason in one sentence and stop —
-never size against a guessed equity. If the user named a sum for the trade,
+`mfa_get_risk_settings` first. Only when it returns a book in the ticker's
+currency, call `mfa_position_size { "ticker": ... }` (send `entry_price` /
+`stop_price` only if they named them): two sentences, the share count with
+its currency, then the one binding constraint. No book for that currency
+(the usual case: most users never set one) and no sum named: ask how much
+they plan to put in this trade, in one sentence — never size against a
+guessed equity. If the user named a sum for the trade,
 use the formula below and show the arithmetic. The ~5% loss is carried by size, not by a tight
 stop: with a named sum, position = sum × 5% ÷ stop distance %, never more
 than the sum (a setup's

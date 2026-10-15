@@ -23,7 +23,9 @@ plainly, small samples included.
 - `mfa_get_calls` — the ledger (open and graded calls, newest first; filter by
   ticker), each graded against the local benchmark (SPY for US, XU100 for
   Borsa İstanbul).
-- `mfa_get_track_record` — one ticker's calls and outcomes.
+- `mfa_get_track_record` — takes no ticker and holds no calls: system-wide
+  signal-kind hit rates (mostly under sample today) plus the user's own
+  closed round trips in R. For one ticker's calls use `mfa_get_calls`.
 - `mfa_get_position_reviews` — past reviews of a holding.
 
 ## Setups: two different measurements
