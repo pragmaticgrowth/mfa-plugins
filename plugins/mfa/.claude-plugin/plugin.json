@@ -1,7 +1,7 @@
 {
   "name": "mfa",
   "displayName": "MFA",
-  "version": "1.6.3",
+  "version": "1.6.4",
   "description": "Work your MFA account from Claude: the tested momentum-1 strategy (monthly list, what to buy and sell), prepared analysis with graded calls, your positions and fills, watchlist and Telegram alerts, and the scorecard. Invite-only; needs an MFA account.",
   "author": { "name": "Pragmatic Growth", "url": "https://getmfa.app" },
   "homepage": "https://app.getmfa.app",

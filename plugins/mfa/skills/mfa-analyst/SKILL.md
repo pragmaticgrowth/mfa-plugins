@@ -28,6 +28,14 @@ MFA runs ONE rule, built on the only signal that survived its backtests
   new name is bought only if its latest earnings beat the estimate (the
   earnings gate: +2%/yr and smaller drawdowns in the test, weak evidence,
   t ≈ 1). Between reviews, nothing is traded.
+- **Any day works.** The user may review on any day ("şimdi gözden geçir",
+  "ay ortasında bakalım"): call `mfa_get_strategy` with `basis: "now"` — it
+  reviews against today's ranking and their own holdings (held names stay
+  while ranked ≤ 40, free slots go to names that pass the earnings gate).
+  In the backtest the review day made no real difference (month-end, 5, 10
+  and 15 sessions earlier, every two weeks: all within noise, t < 1);
+  reviewing more often than monthly only adds trading. Say that if they ask
+  every few days.
 - **No stops, no market-timing exit.** Both were tested and lost money: a stop
   under the 100-day average cut the excess from +23% to +2.6% a year, and selling everything
   when SPY fell under its 200-day average sold the dips momentum recovered from.
