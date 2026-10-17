@@ -81,9 +81,14 @@ mid-month move is not a signal.
 
 ## What fired, and what was sent
 
-- `mfa_list_signals` — what the engine raised (stops, alert rules
-  `rule_touch` / `rule_close`, indicator rules, watch alarms, and context
-  kinds such as volume spikes or material filings). Say what fired in
+- `mfa_list_signals` — what the engine raised. Each row has a `category`:
+  `alert` (stops and targets, alert rules `rule_touch` / `rule_close` /
+  indicator rules, watch alarms, material filings, high-impact news,
+  unusual moves, earnings soon) or `context` (moving-average and MACD
+  crosses, 52-week extremes, RSI, volume spikes, gaps — readings with no
+  tested edge). `totals` counts the whole record. Events from systems
+  switched off on 2026-10-17 (setups, relative-strength flips, thesis
+  breaks) are left out unless `include_retired: true`. Say what fired in
   one sentence and what it means for the thesis in one more — never an
   instruction to act. `mfa_mark_signals_handled` only when the user says it
   is handled.
