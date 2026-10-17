@@ -113,7 +113,10 @@ biri orada").
 - A ticker with no data yet: `mfa_request_coverage` queues it; say it fills in
   within minutes, and give no numbers until it has. At most 100 new tickers per
   user per UTC day: on `coverage_quota_exceeded` say how many remain and when
-  it resets (`resets_at`).
+  it resets (`resets_at`). Positions, fills and watchlist adds are always
+  written; a `coverage_not_queued` in their result means data for those new
+  tickers was not queued because the budget is spent: say so with `resets_at`
+  and give no numbers for them until they are covered.
 
 ## Questions the book tools do not answer
 
