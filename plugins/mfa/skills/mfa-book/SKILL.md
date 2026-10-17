@@ -1,6 +1,6 @@
 ---
 name: mfa-book
-description: This skill should be used when the user wants to see or change their MFA book — positions and P&L, importing broker fills (Midas exports or screenshots), adding, editing, closing or deleting positions, linking a position to the setup signal it was bought on, sizing a trade ("ne kadar alayım"), checking risk balance, the watchlist, remembered preferences and per-currency risk settings. Trigger phrases include "pozisyonlarımı göster", "bu emirleri işle", "ortalamam yanlış", "XYZ'yi sattım", "kurulum alarmıyla aldım", "ne kadar alayım", "defter dengeli mi", "watchlist'e ekle", "riskimi 1%'e çek", or a pasted or attached trade history. Proposing levels and alarms is mfa-alerts; what to buy is mfa-analyst.
+description: This skill should be used when the user wants to see or change their MFA book — positions and P&L, importing broker fills (Midas exports or screenshots), adding, editing, closing or deleting positions, recording the trades of a monthly strategy review, sizing a trade ("ne kadar alayım"), checking risk balance, the watchlist, remembered preferences, strategy capital and per-currency risk settings. Trigger phrases include "pozisyonlarımı göster", "bu emirleri işle", "ortalamam yanlış", "XYZ'yi sattım", "listeyi uyguladım", "ne kadar alayım", "defter dengeli mi", "watchlist'e ekle", "stratejiye 10 bin ayır", "riskimi 1%'e çek", or a pasted or attached trade history. Proposing levels and alarms is mfa-alerts; what to buy is mfa-analyst.
 ---
 
 # MFA book
@@ -21,8 +21,8 @@ inferred from a review or a sizing answer.
 
 ## Show the book
 
-`mfa_list_positions { "status": "open" }` (`mfa_get_ticker` for one name's
-fresh mark). One or two names: a sentence each. Three or more: a table —
+`mfa_list_positions { "status": "open" }` (each row carries the freshest stored
+price with its source and date). One or two names: a sentence each. Three or more: a table —
 Ticker | Qty | Avg cost | Now | P&L — with one subtotal line per currency from
 the tool's own `totals`, never one combined total. Closed history:
 `status: "closed"`; a ticker's executions: `mfa_get_fills`.
@@ -51,9 +51,8 @@ quantity and average, and whether the average excludes fees.
 
 - `mfa_add_positions` — a holding with no execution history (quantity, average
   entry, entry date; currency follows the ticker unless they say otherwise).
-- `mfa_update_position` — note, stop, target, currency, quantity / average,
-  and `setup_signal_id`. Levels they
-  dictate are theirs; proposing levels is `mfa-alerts`.
+- `mfa_update_position` — note, stop, target, currency, quantity / average.
+  Levels they dictate are theirs; proposing levels is `mfa-alerts`.
 - `mfa_close_position` — they actually **sold**. It records a sale.
 - `mfa_delete_positions` — a holding that was never theirs (a typo, a test
   row). It erases the position and its signal / outcome / review history; say
@@ -64,22 +63,21 @@ quantity and average, and whether the average excludes fees.
 
 One confirmation line per row written.
 
-## Bought on a setup alert
+## Applying a monthly strategy review
 
-When they say they bought on a setup signal ("kurulum alarmıyla aldım"), find
-the signal with `mfa_get_setups { "ticker": ... }` or `mfa_list_signals`,
-confirm which one in one line, then link it: `mfa_update_position` with
-`setup_signal_id` = the signal's `id` from `mfa_get_setups`
-(it reads like `setup:XYZ:donchian_50:2026-10-06`). MFA then sends that setup's exit
-(stop, trail, target or time) as a `setup_exit` alert; `null` unlinks. Record
-the position first (fills or `mfa_add_positions`) if it is not in the book yet.
-Tell the user the exit in one sentence from the signal's `exit_rule` — for an
-unproven setup, a 3×ATR(22) trailing stop that only rises, no profit target,
-about six months at most — and that a stop or trail exit always pushes.
+When they say they applied the review ("listeyi uyguladım", a Midas export
+after the review), record the executions as fills (`mfa_record_fills`) — the
+sells close or reduce positions, the buys open them — so the next review
+plans from the real book. `mfa_get_strategy` afterwards should show every
+held sleeve name as `keep`. Strategy capital and the core share are
+`mfa_set_strategy_settings`, on their words only ("stratejiye 10.000 dolar
+ayır" → `capital_usd: 10000`).
 
 ## Sizing — "ne kadar alayım"
 
-`mfa_get_risk_settings` first. Only when it returns a book in the ticker's
+A name on the momentum-1 list is sized by the strategy: an equal slice of the
+sleeve (`mfa_get_strategy` → `plan`, the `buy` rows' `tradeValue`). For
+anything else, `mfa_get_risk_settings` first. Only when it returns a book in the ticker's
 currency, call `mfa_position_size { "ticker": ... }` (send `entry_price` /
 `stop_price` only if they named them): two sentences, the share count with
 its currency, then the one binding constraint. No book for that currency
@@ -88,9 +86,8 @@ they plan to put in this trade, in one sentence — never size against a
 guessed equity. If the user named a sum for the trade,
 use the formula below and show the arithmetic. The ~5% loss is carried by size, not by a tight
 stop: with a named sum, position = sum × 5% ÷ stop distance %, never more
-than the sum (a setup's
-3×ATR stop is usually 10–13% away, so the position is about 40–50% of the
-sum).
+than the sum (a 3×ATR stop is usually 10–13% away, so the position is about
+40–50% of the sum).
 The full reasoning is in `mfa-analyst`.
 
 ## Risk balance — "defter dengeli mi"
@@ -102,7 +99,8 @@ biri orada").
 
 ## Watchlist, memories, risk settings
 
-- `mfa_list_watchlist` / `mfa_get_watchlist_overview` to read;
+- `mfa_list_watchlist` to read (`detail: "overview"` for moves, RSI, RS rank
+  and the distance to each alarm);
   `mfa_add_watchlist`, `mfa_update_watchlist` (note, alert levels),
   `mfa_remove_watchlist` on their words. Price alarms are `mfa-alerts`.
 - `mfa_get_memories` before any substantial reply. `mfa_set_memory` only when
@@ -112,3 +110,12 @@ biri orada").
   (equity, risk per trade). Change only what they named; read the result back.
 - A ticker with no data yet: `mfa_request_coverage` queues it; say it fills in
   within minutes, and give no numbers until it has.
+
+## Questions the book tools do not answer
+
+"Ne zaman, kaçtan aldım", "bu yıl kaç kez işlem yaptım", "realised P&L by
+month", "which fills carried no fee": `mfa_describe_data`, then one
+`mfa_query_data` SELECT over `my_fills` / `my_positions` (your rows only),
+joined to `daily_bars` or `tickers` when a price or a name is needed. Quantities
+and prices there are decimal strings; show the arithmetic you do on them, and
+keep each currency on its own.

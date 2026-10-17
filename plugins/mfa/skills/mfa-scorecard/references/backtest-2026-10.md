@@ -1,6 +1,6 @@
 # The 2026-10 setup backtest — full tables
 
-Read this for a deeper question than `mfa_get_setups` → `findings` answers:
+Read this for a deeper question about the 2026-10 setup study (the setup engine was stopped on 2026-10-17; the strategy study is docs/research/2026-10-strategies):
 "which setup came closest", "how often did the −5% stop hit", "does the
 market regime matter", "what about BIST". The tool output is the live truth
 (`live_count`, `catalogue`); this file is the frozen record of the

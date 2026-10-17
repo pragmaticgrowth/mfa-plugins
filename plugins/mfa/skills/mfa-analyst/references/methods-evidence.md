@@ -3,9 +3,10 @@
 Use this when the user asks "Supertrend işe yarıyor mu", "neden MACD'ye
 güvenmiyorsun", "bu TradingView scripti iyi mi", "momentum çalışır mı",
 "bilanço sonrası boşluk", or proposes a rule of their own. Two sources:
-the published literature (the prior), and MFA's own 2026-10 backtest (what
-five years of US and BIST data said). Quote the backtest numbers that
-`mfa_get_setups` returns (`catalogue`, `findings`) in preference to the
+the published literature (the prior), and MFA's own 2026-10 backtests: the
+setup study (19 short-term entry setups, five years of US and BIST data) and
+the strategy study (portfolio rules, docs/research/2026-10-strategies). Quote
+the numbers `mfa_get_strategy` returns in `evidence` in preference to the
 summaries below; these summaries explain them.
 
 ## Contents
@@ -30,16 +31,35 @@ summaries below; these summaries explain them.
 - Three trade shapes: A10 (−5% stop, +10% target), A20 (−5%, +20%), B3
   (3×ATR(22) chandelier trail, no target), all with a 126-session limit.
 - Development data before 2026-03-01; the holdout after it is never used to
-  choose anything. Gates are fixed before the run (listed in the mfa-analyst
-  SKILL.md, "Setup-first").
+  choose anything. Gates are fixed before the run (n ≥ 200 on ≥ 150 dates,
+  after-cost mean R ≥ 0.25, hit lift ≥ 5pp, BH q ≤ 0.10, sign held in ≥ 75%
+  of years, holdout mean R ≥ 0). No setup passed.
+- The strategy study (portfolio rules) is pre-registered the same way:
+  monthly returns net of costs, Newey-West t of the excess over a matched
+  benchmark, development and holdout both positive, Sharpe and drawdown
+  gates. docs/research/2026-10-strategies/PLAN.md and REPORT.md.
 - With 111 groups tried, the best t-statistic from pure luck is about 2.6, so
   a single good-looking number is not evidence.
 
 ## 2. Trend and momentum
 
+**As a portfolio, 12-1 momentum is MFA's one tested rule (momentum-1).** The
+setup study tested it as a short stop-managed trade (7–19 sessions) and found
+nothing; the strategy study tested it the way the literature does — hold the
+top 20 names, review monthly — and found +21–23%/yr over the matched universe
+(t ≈ 2.0–2.2 at every liquidity floor, positive in development and in the
+2025-26 holdout), with ~48% volatility and −54% to −58% drawdowns. Adding a
+market filter, a hold buffer, a 100-day stop, fewer names or 52-week-high
+ranking made it worse in the first study, but those variants were all stacked on the market filter; tested alone (follow-up study, PLAN-2), a hold buffer to rank 40 kept the return with 46% less trading and a volatility-adjusted score helped, while a per-stock stop and 52-week-high ranking still hurt. Blending 50/50 with SPY kept most of the return
+(~25%/yr) with SPY-like drawdowns (−21%). The investable factor ETF (MTUM,
+diluted and vol-scaled) beat SPY by only ~1.8%/yr over 2014-26; concentrated
+momentum is a different, riskier animal. BIST momentum lost to the BIST
+universe.
+
 | Method | Literature | MFA backtest |
 |---|---|---|
-| 12-1 momentum (top decile, market above 200-day) | Strong long-short evidence (Jegadeesh & Titman 1993); crashes after bear markets; long-only large-cap momentum weak since ~2005 | No lift in US or BIST |
+| 12-1 momentum, top 20, monthly (portfolio) | Strong long-short evidence (Jegadeesh & Titman 1993); crashes after bear-market rebounds | Significant excess, high risk: the live rule's sleeve |
+| 12-1 momentum as a short stop-managed trade | — | No lift in US or BIST |
 | 52-week-high proximity + relative strength | George & Hwang 2004; often not significant after costs | No lift in the US; small positive holdout in BIST, failed the gates |
 | Donchian 50/100/250-day breakouts | Wilcox & Crittenden 2005: ~49% win, big winners carry it, needs a wide stop | Within ±0.1R of chance in both markets (BIST slightly below); volume confirmation did not help |
 | Minervini trend template, squeeze breakout, Weinstein stage 2 | No independent quantitative evidence; full CAN SLIM replication lost money | No lift |
@@ -56,8 +76,12 @@ held with a wide stop. A tight stop removes exactly those trades.
 - MFA's backtest: Supertrend 10/3 (with and without an ADX/200-day filter),
   Supertrend 14/2, MACD signal cross above the 200-day, golden cross and the
   Ichimoku cloud breakout all sat at chance in both markets.
+- The strategy study confirmed it on ETFs over 2005-26: the 10-month SMA on
+  SPY or QQQ, dual momentum and sector rotation halved the worst drawdown
+  (−24% to −34% vs −55%) but gave up 0.4–4pp of CAGR and lost clearly in the
+  2019-26 bull holdout. None passed its gate.
 - These remain useful as alarms (`mfa_add_indicator_alert`) when the user
-  wants to be told; say they are `context` and that their outcomes are graded.
+  wants to be told; say they are context, not edge.
 
 ## 4. TradingView community scripts
 
@@ -105,13 +129,19 @@ stronger than momentum.
   average, a fixed 63-session hold — beat random entries with the same exit
   more often than tight fixed exits or a 2×ATR trail. An observation, not a
   gated result.
-- The practical rule: wide, volatility-scaled stop; small enough position
-  that the stop costs about 5% of the money planned for the trade.
+- The strategy study: a stop below the 100-day average on each momentum name
+  cut the excess from +23%/yr to +2.6%/yr (follow-up study, on plain momentum) — it sold the dips the names recovered
+  from. momentum-1 therefore has no stop; its exit is the monthly review.
+- For a discretionary position outside the strategy: wide, volatility-scaled
+  stop; small enough position that the stop costs the risk the user chose.
 
 ## 8. Market regime
 
 Index-above-200-day filters reduce drawdowns and cost a few points a year in
-bull markets: risk control, not alpha. MFA saw one striking episode: in the
+bull markets: risk control, not alpha. On the momentum sleeve it was worse
+than that: going to cash when SPY fell under its 200-day average cost
+~17pp/yr (2020-26), because it sold at the March-April 2025 and March 2026
+lows and missed the rebounds. MFA saw one striking episode: in the
 2026 holdout, US random entries made while SPY was under its 200-day did far
 better (+0.59R) than those above it (−0.05R); in the five development years
 the two were equal. One episode — mention it as an observation if asked,
@@ -130,7 +160,7 @@ never as a reason to buy.
 
 A rule of the form "buy when X, sell when Y" is a setup to test, not a
 sentence to follow. Restate it precisely (entry trigger, stop, exit, horizon),
-say it will be backtested the same way (same-day random baseline, costs,
-holdout, the same gates) before it can push an alert, and give the user the
-closest measured setup from `mfa_get_setups` in the meantime. Never promise
+say it will be backtested the same way (a pre-registered rule, a baseline,
+costs, a holdout, fixed gates) before it can push an alert, and point to
+momentum-1 as the one rule that has been tested in the meantime. Never promise
 the result.
