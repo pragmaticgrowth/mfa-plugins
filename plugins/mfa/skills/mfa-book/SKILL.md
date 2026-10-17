@@ -1,6 +1,6 @@
 ---
 name: mfa-book
-description: This skill should be used when the user wants to see or change their MFA book — positions and P&L, importing broker fills (Midas exports or screenshots), adding, editing, closing or deleting positions, recording the trades of a monthly strategy review, sizing a trade ("ne kadar alayım"), checking risk balance, the watchlist, remembered preferences, strategy capital and per-currency risk settings. Trigger phrases include "pozisyonlarımı göster", "bu emirleri işle", "ortalamam yanlış", "XYZ'yi sattım", "listeyi uyguladım", "ne kadar alayım", "defter dengeli mi", "watchlist'e ekle", "stratejiye 10 bin ayır", "riskimi 1%'e çek", or a pasted or attached trade history. Proposing levels and alarms is mfa-alerts; what to buy is mfa-analyst.
+description: This skill should be used when the user wants to see or change their MFA book — positions and P&L, importing broker fills (Midas exports or screenshots), adding, editing, closing or deleting positions, recording the trades of a monthly strategy review, sizing a trade ("ne kadar alayım"), checking risk balance, the watchlist, remembered preferences, strategy capital and per-currency risk settings, and (when enabled) placing orders on the user's own Binance account. Trigger phrases include "pozisyonlarımı göster", "bu emirleri işle", "ortalamam yanlış", "XYZ'yi sattım", "listeyi uyguladım", "ne kadar alayım", "defter dengeli mi", "watchlist'e ekle", "stratejiye 10 bin ayır", "riskimi 1%'e çek", "Binance'ten MU al", "emrimi iptal et", or a pasted or attached trade history. Proposing levels and alarms is mfa-alerts; what to buy is mfa-analyst.
 ---
 
 # MFA book
@@ -119,3 +119,30 @@ month", "which fills carried no fee": `mfa_describe_data`, then one
 joined to `daily_bars` or `tickers` when a price or a name is needed. Quantities
 and prices there are decimal strings; show the arithmetic you do on them, and
 keep each currency on its own.
+
+## Trading on Binance (optional)
+
+Only for users the admin enabled, with their own verified key (set up in the
+dashboard: Settings → Trade on Binance). It trades the user's own Binance
+Stocks account — real money — so the rule is fixed:
+
+1. Only when the user asks for a specific order in this conversation. Never on
+   your own initiative, never because a strategy plan or an alert suggests it.
+2. `mfa_trade_preview` (nothing is sent). Show the order exactly as returned —
+   ticker, buy/sell, market/limit, the dollar amount or share quantity, limit
+   price, time in force, session, estimated USD, the reference price with its
+   date, every warning — and ask "Bu emri göndereyim mi?".
+3. Only after their explicit yes ("evet", "gönder") in their next message:
+   `mfa_trade_confirm` with the `order_id` and `confirmation_code`. The code
+   lasts 2 minutes; a refused or expired code, or any change to the order,
+   means preview again and ask again. Never confirm twice for one yes.
+4. Report the outcome in one line (placed, filled at …, or failed and why). A
+   filled order is already in the book; do not record it with
+   `mfa_record_fills`.
+
+Shapes Binance accepts: market buy by dollars (`usd_amount`), market sell by
+shares (`quantity`), limit by `quantity` + `limit_price` + `session`. No stop
+orders. A market order outside 09:30–16:00 ET waits for the next open — say so.
+`mfa_trading_status` shows access, key, limits and today's use;
+`mfa_trade_orders` lists orders (and refreshes open ones); `mfa_trade_cancel`
+cancels an open order only when the user asks.
