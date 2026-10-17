@@ -126,6 +126,16 @@ Only for users the admin enabled, with their own verified key (set up in the
 dashboard: Settings → Trade on Binance). It trades the user's own Binance
 Stocks account — real money — so the rule is fixed:
 
+"Can I buy X on Binance?" / "which of the list can I buy there?":
+`mfa_binance_symbols` (Binance's own catalog, daily; no key needed) —
+listed, can buy / sell, fractional shares, minimum order. `mfa_get_strategy`'s
+plan rows also carry `onBinance`. Fees are the `fees` text those tools return;
+never invent a number.
+
+Buying power: `mfa_trading_status` refreshes the USDC balance first and shows
+it per wallet (`usdc_wallets` funding / spot) with `balance_checked_at`; a buy
+pays from the wallet that covers it. Quote that, never an older number.
+
 1. Only when the user asks for a specific order in this conversation. Never on
    your own initiative, never because a strategy plan or an alert suggests it.
 2. `mfa_trade_preview` (nothing is sent). Show the order exactly as returned —
