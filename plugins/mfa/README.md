@@ -19,7 +19,7 @@ and broker fills, your watchlist and price alerts, and the scorecard.
 
 The monthly strategy review, stops, alert rules, the weekday note and the
 Monday scorecard arrive on Telegram. Set your Telegram id at app.getmfa.app →
-Settings.
+Settings and enter the code the bot sends to that chat.
 
 ## Skills
 

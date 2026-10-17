@@ -8,7 +8,8 @@ description: This skill should be used when the user wants to propose or set sto
 Telegram is MFA's alert channel only: the user works in Claude, and MFA
 pushes the monthly strategy review, stops, alert rules, the weekday note and
 the Monday scorecard to their Telegram. Nobody chats with the bot. The Telegram id is set on the MFA
-dashboard (app.getmfa.app → Settings), which can also send a test message;
+dashboard (app.getmfa.app → Settings: the user enters the id, then the code
+the bot sends to that chat), which can also send a test message;
 when alerts are not arriving, point the user there.
 
 Never volunteer a level. Speak a level only when the user asks for one, or as

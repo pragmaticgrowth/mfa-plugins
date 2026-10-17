@@ -45,7 +45,9 @@ Show the rows as a table and say this recomputes each affected ticker's
 quantity and average cost from its whole ledger. After their "evet" / "yes",
 send the whole export in ONE `mfa_record_fills` call (re-sending is safe;
 duplicates come back as `duplicate`). Confirm one line per ticker: the new
-quantity and average, and whether the average excludes fees.
+quantity and average (always before commission; stated fees are summed in
+`fees_total`), and say so when `fees_stated` is false: some executions carried
+no fee.
 
 ## Add, edit, close, delete
 
@@ -109,7 +111,9 @@ biri orada").
 - `mfa_get_risk_settings` / `mfa_set_risk_settings` — one book per currency
   (equity, risk per trade). Change only what they named; read the result back.
 - A ticker with no data yet: `mfa_request_coverage` queues it; say it fills in
-  within minutes, and give no numbers until it has.
+  within minutes, and give no numbers until it has. At most 100 new tickers per
+  user per UTC day: on `coverage_quota_exceeded` say how many remain and when
+  it resets (`resets_at`).
 
 ## Questions the book tools do not answer
 
@@ -138,14 +142,20 @@ pays from the wallet that covers it. Quote that, never an older number.
 
 1. Only when the user asks for a specific order in this conversation. Never on
    your own initiative, never because a strategy plan or an alert suggests it.
-2. `mfa_trade_preview` (nothing is sent). Show the order exactly as returned —
-   ticker, buy/sell, market/limit, the dollar amount or share quantity, limit
-   price, time in force, session, estimated USD, the reference price with its
-   date, every warning — and ask "Bu emri göndereyim mi?".
-3. Only after their explicit yes ("evet", "gönder") in their next message:
-   `mfa_trade_confirm` with the `order_id` and `confirmation_code`. The code
-   lasts 2 minutes; a refused or expired code, or any change to the order,
-   means preview again and ask again. Never confirm twice for one yes.
+2. `mfa_trade_preview` (nothing is sent to Binance). MFA sends a 6-digit
+   confirmation code to the user's Telegram; you never see it. Show the order
+   exactly as returned — ticker, buy/sell, market/limit, the dollar amount or
+   share quantity, limit price, time in force, session, estimated USD, the
+   reference price with its date, every warning — and ask "Bu emri göndereyim
+   mi? Onaylıyorsan Telegram'a gelen 6 haneli kodu yaz."
+3. Only after their explicit yes ("evet", "gönder") and the code they received
+   on Telegram, typed in their next message: `mfa_trade_confirm` with the
+   `order_id` and that code. Never guess the code, make one up, or look for it
+   in the Telegram log (it is masked there). The code lasts 2 minutes; a
+   refused or expired code, a code that never arrived, or any change to the
+   order means preview again and ask again. Never confirm twice for one yes.
+   `telegram_required` means no Telegram account is linked: the user links
+   one in the dashboard (Settings → Telegram alerts) before trading.
 4. Report the outcome in one line (placed, filled at …, or failed and why). A
    filled order is already in the book; do not record it with
    `mfa_record_fills`.
