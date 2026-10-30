@@ -20,7 +20,14 @@ MFA runs ONE rule, built on the only signal that survived its backtests
 - **Sleeve:** 20 US stocks, equal weight, ranked by 12-1 momentum (the return
   from 12 months ago to 1 month ago) divided by the past year's volatility;
   price ≥ $5, ≥ $100M/day turnover. The volatility adjustment favours steady
-  climbers over lottery-ticket spikes.
+  climbers over lottery-ticket spikes. Since 2026-10-30 a listing 7 to 13
+  months old (147–272 sessions: a spin-off like Sandisk, a recent IPO) is
+  ranked on its 6-1 return ÷ 6-month volatility instead of staying invisible
+  until it is a year old (its row says `window: "6-1"`). It was adopted on
+  no-harm gates, not as a proven gain — the same lists as before in every
+  review before 2025, and the whole measured gain (+3.3%/yr, t 1.44) is one
+  name, SNDK (bought at $211 in 2025-11 instead of $652 in 2026-04; without
+  it +0.15%/yr) — so say that whenever a young name is on the list.
 - **Review:** the last US session of each month. A held name stays while it
   ranks in the top 40 (the hold buffer, which cut trading by ~45% for the same
   return); one that falls below 40 is sold at the next open (**get off the
@@ -90,6 +97,38 @@ ranking), `holdings` (each position's rank today and status `keep` / `sell` /
 forward record of every list vs SPY — new evidence) and `evidence`.
 `mfa_set_strategy_settings` changes capital, core share or the monthly
 message, only on the user's words.
+
+**The shadow list (`mfa_get_strategy` → `shadow.revisions`).** A second list
+runs beside the rule as a forward test, `revisions-1`: the 20 names of the
+momentum universe whose analysts raised their EPS estimates most over 30 days,
+frozen monthly and graded against SPY and the momentum list. MFA only began collecting
+estimates on 2026-09-24, so it was never backtested: it has no plan, no trades
+and no message, and is judged after 12 lists. Mention it when the user asks
+about analyst revisions or upgrades, or for "another method"; a name on it is
+a lead to check, never a recommendation by itself.
+
+### The hunting list
+
+The rule sees a stock only after a year of history and a big move; the
+hunting list is where big moves START. `mfa_get_breakouts` lists the US
+names that closed above their one-year high (or their high since listing)
+on at least 3× their usual volume, nightly — `young` ones are listed fewer
+than 273 sessions, which momentum-1 cannot rank yet. Call it when the user
+asks for ideas or early movers: "fırsat var mı", "yeni ne var", "10 kat",
+"erken yakalamak", "yeni halka arzlar".
+
+It is a candidate feed, never a signal: as a trade, the same entry did not
+beat a random one in the setup backtest. So pick the few worth a look
+(liquidity, what the move came from, earnings close by — `nextEarnings`),
+run `mfa_prepare` → `mfa_prepare_status` → `mfa_get_dossier` on those, give
+the verdict with its evidence label and record it with `mfa_record_call`.
+Quote `evidence.label` as it stands: `pending` — the test has not reported,
+quote no odds and say so; `fat_right_tail` — `evidence.summary` with its
+own numbers (a fatter right tail: more names doubling than a random pick),
+always WITH its worse median and its larger share of −30% outcomes;
+`untested` — it failed its
+test, give the measured numbers and claim nothing. `track` is the list's own
+forward record; under 20 signals per horizon it reads `not_available`.
 
 ## The loop
 

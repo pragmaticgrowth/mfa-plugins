@@ -16,6 +16,7 @@ market regime matter", "what about BIST". The tool output is the live truth
 6. Holdout
 7. Limitations
 8. How a setup earns trust
+9. PLAN-5 (2026-10-30): young listings, the hunting list, shadow lists
 
 ## 1. Method and gates
 
@@ -172,3 +173,40 @@ A new or changed setup goes into the catalogue with its parameters fixed
 before the run that grades it; a passing run publishes a new catalogue
 version and only then can the setup push. Forward results in
 `setups.live` are evidence for the next run, not a promotion by themselves.
+
+## 9. PLAN-5 (2026-10-30)
+
+Pre-registered before the run (docs/research/2026-10-strategies/PLAN-5.md;
+results in REPORT.md, "PLAN-5 results"). Months 2020-08 → 2026-09, US names
+turning over ≥ $100M a day, 0.15% a side, today's listings.
+
+- **A. Young listings in the sleeve — adopted into momentum-1 on 2026-10-30**
+  (`evidence.amendment`). A listing with 147–272 sessions of history (7 to 13
+  months) is scored on its 6-1 return ÷ 6-month volatility; 273+ sessions
+  unchanged. All four no-harm gates passed: excess over the old rule
+  +3.33%/yr (t 1.44); development period +0.00% (the same list at all 53
+  reviews); without the biggest winner, SNDK, +0.15%/yr (t 0.73); max
+  drawdown identical (−48.1%); worst month −28.9% vs −25.9% (2026-07, 2.97pp
+  worse against a 3pp bar); turnover 4.77 vs 4.83 a year. Holdout
+  (2025-01 → 2026-09) +11.74%/yr, t 2.05. SNDK was first bought at $210.85 on
+  2025-11-03 instead of $652.29 on 2026-04-01. **The whole measured gain is
+  that one name**: the change was adopted because it did no harm and lets a
+  spin-off or an IPO in after six months, not as a proven gain. Say so.
+- **B. The hunting list — a label, not a rule.** A close above the prior
+  252-session high on ≥ 3× normal share volume, price ≥ $5. At the $100M/day
+  floor: 1,103 signal-days from 467 names (~17 a month). Twelve months later
+  P(≥ +100%) was 8.3% vs 3.6% for a random name on the same day (2.31×) and
+  P(≥ +200%) 3.2% vs 0.9% — but the median was +4.8% vs +7.3% and
+  P(≤ −30%) 20.5% vs 12.4%, and the 92 doublings came from 42 names. It
+  labels a candidate list (the hunting-list tool, being added), never a buy
+  signal: the 2026-10 setup study found the same breakout entry no better
+  than a random entry as a trade. Quote it as "about twice as likely to
+  double within a year, with a worse median and more −30% outcomes".
+- **C. Quality screen — not testable.** The stored quarterly statements start
+  at period end 2024-11, so no point-in-time profitability screen over the
+  window was possible.
+- **D. Analyst-revision shadow list (`revisions-1`) — forward only.** The 20
+  names with the biggest mean 30-day EPS revision, frozen at each month end
+  and compared with SPY and the momentum list (`mfa_get_strategy` →
+  `shadow`, being added). Estimate history starts 2026-09-24, so there is no
+  backtest; it is judged after 12 lists and changes nothing until then.

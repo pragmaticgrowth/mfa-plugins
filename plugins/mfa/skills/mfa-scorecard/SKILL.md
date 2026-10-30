@@ -18,6 +18,9 @@ plainly, small samples included.
   dates, plus `cumulative` / `spyCumulative`; `evidence` — the backtest.
   Under about a year of rows this is not evidence either way; say how many
   months there are.
+- `mfa_get_strategy` → `shadow.revisions.track` — the analyst-revision shadow
+  list's forward months vs SPY and vs the momentum list (`judgement`: finished
+  months and the mean excess over each); a forward test, judged after 12 lists.
 - `mfa_get_scorecard` — the graded buckets: calls by verdict and horizon,
   and news events. A bucket with fewer than 20 samples reads
   `not_available`: say "not enough graded samples yet", never a rate.
@@ -38,6 +41,12 @@ plainly, small samples included.
   volatility and a −54% drawdown it failed the risk gates alone, so it runs
   blended with SPY (50/50: ~25%/yr, −21% worst drawdown vs SPY 16% / −25% in 2020–26; in the 1927–2026 survivorship-free history the mix fell −50% in 2008–09, like the market, and momentum's recent edge was ~3.7%/yr, not 23%).
   Market filters, stops, buffers, BIST momentum and ETF timing all failed.
+  Amended in place on 2026-10-30 (PLAN-5, `evidence.amendment`; details in
+  `references/backtest-2026-10.md`): a listing 7–13 months old is now ranked
+  on its 6-1 return ÷ 6-month volatility, adopted on no-harm gates only — the
+  lists were identical before 2025 and the whole measured gain (+3.3%/yr,
+  t 1.44) is one name, SNDK (+0.15%/yr without it), so never quote it as a
+  proven gain.
   Quote `mfa_get_strategy` → `evidence`.
 - **Setup study** (2026-10-07, 5 years, 4,047 names, 19 setups × 3 trade
   shapes, 1.59M trades, after costs): no short-term entry setup beat a random
