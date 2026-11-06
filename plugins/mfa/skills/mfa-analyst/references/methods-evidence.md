@@ -18,7 +18,7 @@ summaries below; these summaries explain them.
 5. Mean reversion
 6. Earnings, news and other events
 7. Stops and exits
-8. Market regime
+8. Market regime and market stress
 9. Borsa İstanbul
 10. Answering "add my rule"
 11. PLAN-5 (2026-10-30): young listings, the hunting list, shadow lists
@@ -142,17 +142,49 @@ stronger than momentum.
 - For a discretionary position outside the strategy: wide, volatility-scaled
   stop; small enough position that the stop costs the risk the user chose.
 
-## 8. Market regime
+## 8. Market regime and market stress
 
 Index-above-200-day filters reduce drawdowns and cost a few points a year in
 bull markets: risk control, not alpha. On the momentum sleeve it was worse
 than that: going to cash when SPY fell under its 200-day average cost
 ~17pp/yr (2020-26), because it sold at the March-April 2025 and March 2026
-lows and missed the rebounds. MFA saw one striking episode: in the
+lows and missed the rebounds. A volatility-scaled sleeve share (smaller when
+the sleeve's 6-month volatility is high) was also tested and failed: no
+smaller worst drawdown (−21.0% vs −20.9% for 50/50; −78.1% vs −77.7% over
+1927-2026) for −0.8pp a year. MFA saw one striking episode: in the
 2026 holdout, US random entries made while SPY was under its 200-day did far
 better (+0.59R) than those above it (−0.05R); in the five development years
 the two were equal. One episode — mention it as an observation if asked,
 never as a reason to buy.
+
+**Market stress readings (PLAN-6, 2026-11-02).** `mfa_get_strategy` → `risk`
+and the dossier's `market_stress` carry four readings with a flag past each
+cutoff: the momentum list against SPY over 20 sessions (flag at −12.5% or
+worse, the 5% tail of 2020-26), VIX ÷ VIX3M (flag at 1.04 or more, the 5% tail
+since 2007), the Baa credit spread's change over 20 trading days (flag at
++0.27 points, since 1986) and S&P 500 futures positioning from the CFTC (asset
+managers and hedge funds, flag outside their three-year 5%-95% band). What
+followed, measured over the long history: after VIX inversions (34 episodes)
+the market's median next month was +3.5% against +1.7% for any session; after
+fast credit widening (41 episodes) +3.3% against +1.5%; after positioning
+extremes about the same as usual. The list flag has only eight episodes and
+what followed went both ways (+19.9% to −13.5% against SPY). These readings
+describe stress the market has usually already priced; they are not a timing
+signal.
+
+How to use them:
+
+- Quote them as context with `risk.note`, never as a reason to sell the list,
+  shrink the sleeve, delay a review or time the market. None of those passed a
+  test; say so if asked.
+- When the user brings a headline about fund flows or hedge-fund selling
+  ("fastest ever"), check `risk` first: the measured reading beats a relayed
+  superlative. Prime-broker numbers reach the news a week or more late and
+  usually describe one desk's slice (de-grossing, one sector, one region).
+- The real lever is the mix the user chooses (`core_pct`): if a −26% sleeve
+  month (July 2026) is more than they can sit through, a lower sleeve share
+  for good, set with `mfa_set_strategy_settings`, is the honest answer — not a
+  trade after the fall.
 
 ## 9. Borsa İstanbul
 

@@ -72,7 +72,7 @@ signal line, Ichimoku cloud break up/down.
 
 MFA sends it by itself; there is nothing to arm. On the evening of the last
 US session of each month (after the US close), each user with the strategy on
-gets one message: the month's top-20 list applied to their USD book — SAT
+gets one message: the month's top-15 list applied to their USD book — SAT
 (held, dropped off the list), AL (new names, the USD slice each), TUT, and the
 core (SPY) adjustment — with the date the trades are meant for (the next
 session's open). `mfa_get_strategy` shows the same plan at any time;

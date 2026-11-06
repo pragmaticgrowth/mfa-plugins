@@ -43,7 +43,7 @@ Settings and enter the code the bot sends to that chat.
 MFA tested 19 short-term entry methods on five years of US and Borsa İstanbul
 prices against random entries on the same day, after costs: none beat chance.
 It then tested 13 portfolio rules, pre-registered, with a holdout, and a
-follow-up after two outside reviews. What held up: hold 20 US stocks ranked
+follow-up after two outside reviews. What held up: hold 20 US stocks (15 since 2026-11-05, which did no harm with a real $1.50 ticket) ranked
 by 12-month momentum (skipping the last month) divided by their volatility,
 keep a name while it stays in the top 40, review monthly, next to a core in
 SPY. No stops and no market-timing exits — both were tested and lost money.
