@@ -17,7 +17,7 @@ MFA runs ONE rule, built on the only signal that survived its backtests
 (docs/research/2026-10-strategies, 2020-08 → 2026-09):
 
 - **Core:** a share of the money (default 50%) in SPY, always held.
-- **Sleeve:** 20 US stocks, equal weight, ranked by 12-1 momentum (the return
+- **Sleeve:** 15 US stocks (20 before 2026-11-05), equal weight, ranked by 12-1 momentum (the return
   from 12 months ago to 1 month ago) divided by the past year's volatility;
   price ≥ $5, ≥ $100M/day turnover. The volatility adjustment favours steady
   climbers over lottery-ticket spikes. Since 2026-10-30 a listing 7 to 13
@@ -46,6 +46,15 @@ MFA runs ONE rule, built on the only signal that survived its backtests
 - **No stops, no market-timing exit.** Both were tested and lost money: a stop
   under the 100-day average cut the excess from +23% to +2.6% a year, and selling everything
   when SPY fell under its 200-day average sold the dips momentum recovered from.
+- **Market stress is context.** `mfa_get_strategy` → `risk` (and the dossier's
+  `market_stress`) shows the list against SPY, VIX ÷ VIX3M, the credit spread
+  and futures positioning, with a flag past each measured cutoff. Quote it with
+  `risk.note`; never as a reason to sell, shrink the sleeve or time the market,
+  which a volatility-scaled sleeve share also failed to justify. Details:
+  `references/methods-evidence.md` §8. VIX, VIX3M and the Baa spread come
+  from FRED a day or two late and CFTC positioning is weekly: give each with
+  the date `risk` carries, never as missing. A session's own row is written
+  after that evening's close, so during the session quote the previous one.
 
 Evidence, to quote honestly: in 2020–26 the sleeve alone (with the earnings
 gate) made ~35% a year with ~37% volatility and a −46% worst drawdown (excess
@@ -120,7 +129,7 @@ asks for ideas or early movers: "fırsat var mı", "yeni ne var", "10 kat",
 It is a candidate feed, never a signal: as a trade, the same entry did not
 beat a random one in the setup backtest. So pick the few worth a look
 (liquidity, what the move came from, earnings close by — `nextEarnings`),
-run `mfa_prepare` → `mfa_prepare_status` → `mfa_get_dossier` on those, give
+run `mfa_prepare` → `mfa_prepare_status` (once) → `mfa_get_dossier` on those, give
 the verdict with its evidence label and record it with `mfa_record_call`.
 Quote `evidence.label` as it stands: `pending` — the test has not reported,
 quote no odds and say so; `fat_right_tail` — `evidence.summary` with its
@@ -148,8 +157,8 @@ forward record; under 20 signals per horizon it reads `not_available`.
 
 **One ticker ("XYZ'yi analiz et", "XYZ alınır mı"):**
 
-1. `mfa_prepare` → `mfa_prepare_status` until `done` / `partial` →
-   `mfa_get_dossier`. Also `mfa_get_strategy` once per conversation for the
+1. `mfa_prepare` → `mfa_prepare_status` once (it waits up to 45 s; call
+   it again only if it still says `running`) → `mfa_get_dossier`. Also `mfa_get_strategy` once per conversation for the
    name's rank.
 2. Verdict, timing part from the rule: on the list (rank ≤ 20) → it belongs
    in the sleeve at the next review; outside → "Listede değil (sıra N)" and
